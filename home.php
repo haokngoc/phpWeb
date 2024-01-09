@@ -1,3 +1,11 @@
+<?php
+if (isset($_GET['login']) && $_GET['login'] === 'success') {
+    $successMessage = "Login successful!";
+} else {
+    $successMessage = "";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +14,40 @@
     <title>Home</title>
     <link rel="stylesheet" href="main.css">
     <link rel="icon" href="logo.jpg" type="image">
+    <style>
+        .notification {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
+
 <?php include('navigation.php'); ?>
+<div id="notification" class="notification"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy thông báo từ tham số URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var message = urlParams.get('message');
+
+        // Hiển thị thông báo nếu có
+        if (message) {
+            var notificationElement = document.getElementById('notification');
+            notificationElement.innerText = message;
+            notificationElement.style.display = 'block';
+            setTimeout(function () {
+                notificationElement.style.display = 'none';
+            }, 5000);
+        }
+    });
+</script>
+
 </body>
 </html>

@@ -9,8 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jsonData['account_information']['password'] = $newPassword;
     $json_data = json_encode($jsonData, JSON_PRETTY_PRINT);
     file_put_contents($jsonFileName, $json_data);
-    header("Location: home.php");
+    $successMessage = "Password changed successfully!";
+    header("Location: change_password.php?message=" . urlencode($successMessage));
     exit();
+
 } else {
     header("Location: index.php");
     exit();
