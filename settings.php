@@ -18,6 +18,8 @@ if ($data) {
     // Xử lý trường hợp không đọc được dữ liệu từ tệp JSON
     $ipAddress = $loggingMethod = $loggingLevel = $wirelessMode = $wirelessSSID = $wirelessPassPhrase = '';
 }
+$response1 = isset($_GET['response1']) ? $_GET['response1'] : '';
+$response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
 ?>
 
 <!DOCTYPE html>
@@ -31,13 +33,15 @@ if ($data) {
     <style>
         .notification {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            top: 80%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #4CAF50;
             color: #fff;
             padding: 15px;
             border-radius: 5px;
             display: none;
+            z-index: 1000; /* Đảm bảo nó hiển thị trên cùng */
         }
     </style>
 </head>
@@ -81,22 +85,33 @@ if ($data) {
     <div id="notification" class="notification"></div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Lấy thông báo từ tham số URL
-            var urlParams = new URLSearchParams(window.location.search);
-            var message = urlParams.get('message');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy thông báo từ tham số URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var message = urlParams.get('message');
+        var response1 = urlParams.get('response1');
+        var response2 = urlParams.get('response2');
 
-            // Hiển thị thông báo nếu có
-            if (message) {
-                var notificationElement = document.getElementById('notification');
-                notificationElement.innerText = message;
-                notificationElement.style.display = 'block';
-                setTimeout(function () {
-                    notificationElement.style.display = 'none';
-                }, 5000);
-            }
-        });
-    </script>
+        // Tạo một thông báo kết hợp từ response1 và response2
+        var combinedMessage = (response1 ? 'Ip address current: ' + response1 + '\n' : '') +
+                              (response2 ? 'Response' + response2 + '\n' : '');
+
+        // Nếu có thông báo từ URL, thêm vào thông báo kết hợp
+        if (message) {
+            combinedMessage += message;
+        }
+
+        // Hiển thị thông báo nếu có
+        if (combinedMessage) {
+            var notificationElement = document.getElementById('notification');
+            notificationElement.innerText = combinedMessage;
+            notificationElement.style.display = 'block';
+            setTimeout(function () {
+                notificationElement.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
 
 </div>
 </body>

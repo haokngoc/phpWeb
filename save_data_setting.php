@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     file_put_contents($jsonFileName, $json_data);
 
     $jsonData = file_get_contents('data.json');  // Đọc nội dung của file data.json
-    $serverHost = '127.0.0.1';  // Thay bằng địa chỉ IP hoặc tên miền của máy chủ C++
+    $serverHost = '127.0.0.1';  // 
     $serverPort = 12345;
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     if (!$socket) {
@@ -42,9 +42,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // socket_close($socket);
     // Nhận thông báo 
     $response = socket_read($socket, 1024);  // 1024 là kích thước buffer nhan
+    $response1 = socket_read($socket, 1024);
+    $response2 = socket_read($socket, 1024);
     socket_close($socket);
-
-    header("Location: settings.php?message=" . urlencode($response));
+    // In ra giá trị $response1 và $response2
+    // header("Location: settings.php?message=" . urlencode($response));
+    header("Location: settings.php?message=" . urlencode($response) . "&response1=" . urlencode($response1) . "&response2=" . urlencode($response2));
     exit();
 } else {
     header("Location: index.php");

@@ -17,13 +17,15 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
     <style>
         .notification {
             position: fixed;
-            top: 10px;
-            right: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #4CAF50;
             color: #fff;
             padding: 15px;
             border-radius: 5px;
             display: none;
+            z-index: 1000; /* Đảm bảo nó hiển thị trên cùng */
         }
     </style>
 </head>
@@ -44,7 +46,7 @@ if (isset($_GET['login']) && $_GET['login'] === 'success') {
             notificationElement.style.display = 'block';
             setTimeout(function () {
                 notificationElement.style.display = 'none';
-            }, 5000);
+            }, 3000);
         }
     });
 </script>

@@ -21,7 +21,9 @@
         a.download-link:hover {
             background-color: #2980b9;
         }
-
+        h1 {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -30,7 +32,9 @@
         $downloadPage = 'download.php';
         $filePath = '/home/hk/eclipse-workspace/01_IMX8_Server_x86/logfile.1.txt';
     ?>
-    <h1>Download file log</h1>
-    <a class="download-link" href="<?php echo $downloadPage . '?path=' . urlencode($filePath); ?>">Download File</a>
+    <div >
+        <h1>Click the link to download the filelog</h1>
+        <a class="download-link" href="<?php echo $downloadPage . '?path=' . urlencode($filePath); ?>">Download File</a>
+    </div>
 </body>
 </html>
