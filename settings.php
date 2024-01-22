@@ -51,12 +51,12 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
     <form action="save_data_setting.php" method="post">
         <p><strong>Network Settings</strong></p>
         <label for="ip-address">IP Address:</label>
-        <input type="text" id="ip-address" name="ip-address" value="<?php echo $ipAddress; ?>">
+        <input type="text" id="ip-address" name="ip-address" pattern="(?:[0-9]{1,3}\.){3}[0-9]{1,3}" title="Enter a valid IP address" required> 
 
         <p><strong>Logging Settings</strong></p>
-        <label for="logging-method">Logging Method:</label>
+        <!-- <label for="logging-method">Logging Method:</label>
         <input type="text" id="logging-method" name="logging-method" value="<?php echo $loggingMethod; ?>">
-        <br>
+        <br> -->
         <label for="logging-level">Logging Level:</label>
         <select id="logging-level" name="logging-level">
             <option value="debug" <?php echo ($loggingLevel === 'debug') ? 'selected' : ''; ?>>Debug</option>
@@ -72,7 +72,7 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
 
         <input type="radio" id="access-point" name="wireless-mode" value="access-point" <?php echo ($wirelessMode === 'access-point') ? 'checked' : ''; ?>>
         <label for="access-point">Access Point</label>
-        <p>Valid SSID and Pas Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
+        <p>Valid SSID and Pass Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
         <br>
         <label for="wireless-SSID">Wireless SSID:</label>
         <input type="text" id="wireless-SSID" name="wireless-SSID" value="<?php echo $wirelessSSID; ?>">

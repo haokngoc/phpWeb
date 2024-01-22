@@ -1,7 +1,7 @@
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ipAddress = $_POST["ip-address"];
-    $loggingMethod = $_POST["logging-method"];
+    // $loggingMethod = $_POST["logging-method"];
     $loggingLevel = $_POST["logging-level"];
     $wirelessMode = $_POST["wireless-mode"];
     $wirelessSSID = $_POST["wireless-SSID"];
@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Thêm thông tin mới vào mảng dữ liệu
     $jsonData['settings']['ip-address'] = $ipAddress;
-    $jsonData['settings']['logging-method'] = $loggingMethod;
+    // $jsonData['settings']['logging-method'] = $loggingMethod;
     $jsonData['settings']['logging-level'] = $loggingLevel;
     $jsonData['settings']['wireless-mode'] = $wirelessMode;
     $jsonData['settings']['wireless-SSID'] = $wirelessSSID;
