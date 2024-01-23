@@ -30,7 +30,7 @@
     <?php include('navigation.php'); ?>
     <?php
         $downloadPage = 'download.php';
-        $filePath = '/home/hk/eclipse-workspace/01_IMX8_Server_x86/logfile.1.txt';
+        $filePath = '/home/hk/eclipse-workspace/01_IMX8_Server_x86/logfile.txt';
     ?>
     <div >
         <h1>Click the link to download the filelog</h1>

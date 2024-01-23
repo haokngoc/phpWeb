@@ -4,7 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     try {
         // Đọc dữ liệu từ tệp JSON hiện tại (nếu có)
-        $jsonFileName = 'data.json';
+        $jsonFileName = '/home/hk/eclipse-workspace/01_IMX8_Server_x86/received_data.json';
         $jsonData = file_exists($jsonFileName) ? json_decode(file_get_contents($jsonFileName), true) : array();
 
         // Thêm thông tin mới vào mảng dữ liệu
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         file_put_contents($jsonFileName, $json_data);
 
         // Gửi dữ liệu đến server
-        $serverHost = 'localhost';  // Đổi thành địa chỉ IP hoặc tên miền của server
+        $serverHost = 'localhost';  
         $serverPort = 12345;
 
         $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);

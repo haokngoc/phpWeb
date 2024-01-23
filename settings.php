@@ -1,6 +1,6 @@
 <?php
 // Đường dẫn đến tệp JSON
-$jsonFileName = '/var/www/html/web/data.json';
+$jsonFileName = '/home/hk/eclipse-workspace/01_IMX8_Server_x86/received_data.json';
 
 // Đọc dữ liệu từ tệp JSON
 $jsonData = file_get_contents($jsonFileName);
@@ -9,7 +9,6 @@ $data = json_decode($jsonData, true);
 // Kiểm tra xem có dữ liệu không trước khi sử dụng
 if ($data) {
     $ipAddress = isset($data['settings']['ip-address']) ? $data['settings']['ip-address'] : '';
-    $loggingMethod = isset($data['settings']['logging-method']) ? $data['settings']['logging-method'] : '';
     $loggingLevel = isset($data['settings']['logging-level']) ? $data['settings']['logging-level'] : '';
     $wirelessMode = isset($data['settings']['wireless-mode']) ? $data['settings']['wireless-mode'] : '';
     $wirelessSSID = isset($data['settings']['wireless-SSID']) ? $data['settings']['wireless-SSID'] : '';
@@ -41,8 +40,13 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
             padding: 15px;
             border-radius: 5px;
             display: none;
-            z-index: 1000; /* Đảm bảo nó hiển thị trên cùng */
+            z-index: 1000; 
         }
+        .wireless-settings input[type="text"].access-point {
+            border: none;
+            outline: none;
+        }
+
     </style>
 </head>
 <body>
@@ -51,12 +55,9 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
     <form action="save_data_setting.php" method="post">
         <p><strong>Network Settings</strong></p>
         <label for="ip-address">IP Address:</label>
-        <input type="text" id="ip-address" name="ip-address" pattern="(?:[0-9]{1,3}\.){3}[0-9]{1,3}" title="Enter a valid IP address" required> 
+        <input type="text" id="ip-address" name="ip-address" pattern="(?:[0-9]{1,3}\.){3}[0-9]{1,3}" title="Enter a valid IP address" required value="<?php echo $ipAddress; ?>"> 
 
         <p><strong>Logging Settings</strong></p>
-        <!-- <label for="logging-method">Logging Method:</label>
-        <input type="text" id="logging-method" name="logging-method" value="<?php echo $loggingMethod; ?>">
-        <br> -->
         <label for="logging-level">Logging Level:</label>
         <select id="logging-level" name="logging-level">
             <option value="debug" <?php echo ($loggingLevel === 'debug') ? 'selected' : ''; ?>>Debug</option>
@@ -72,46 +73,62 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
 
         <input type="radio" id="access-point" name="wireless-mode" value="access-point" <?php echo ($wirelessMode === 'access-point') ? 'checked' : ''; ?>>
         <label for="access-point">Access Point</label>
-        <p>Valid SSID and Pass Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
-        <br>
-        <label for="wireless-SSID">Wireless SSID:</label>
-        <input type="text" id="wireless-SSID" name="wireless-SSID" value="<?php echo $wirelessSSID; ?>">
-        <br>
-        <label for="wireless-Pass-Phrase">Wireless Pass Phrase:</label>
-        <input type="text" id="wireless-Pass-Phrase" name="wireless-Pass-Phrase" value="<?php echo $wirelessPassPhrase; ?>">
-        <br>
+
+        <!-- Thêm một lớp CSS để chứa các trường cài đặt không hiển thị mặc định -->
+        <div class="wireless-settings">
+            <p>Valid SSID and Pass Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
+            <br>
+            <label for="wireless-SSID">Wireless SSID:</label>
+            <input type="text" id="wireless-SSID" name="wireless-SSID" <?php echo ($wirelessMode === 'access-point') ? 'value="voyance" readonly' : 'value="' . $wirelessSSID . '"'; ?>>
+            <br>
+            <label for="wireless-Pass-Phrase">Wireless Pass Phrase:</label>
+            <input type="text" id="wireless-Pass-Phrase" name="wireless-Pass-Phrase" <?php echo ($wirelessMode === 'access-point') ? 'value="123456789" readonly' : 'value="' . $wirelessPassPhrase . '"'; ?>>
+            <br>
+        </div>
         <button type="submit" name="update-button">Update</button>
     </form>
     <div id="notification" class="notification"></div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Lấy thông báo từ tham số URL
-        var urlParams = new URLSearchParams(window.location.search);
-        var message = urlParams.get('message');
-        var response1 = urlParams.get('response1');
-        var response2 = urlParams.get('response2');
+        document.addEventListener('DOMContentLoaded', function () {
+            var wirelessModeRadio = document.getElementsByName('wireless-mode');
+            var wirelessSettings = document.querySelector('.wireless-settings');
+            var wirelessSSIDInput = document.getElementById('wireless-SSID');
+            var wirelessPassPhraseInput = document.getElementById('wireless-Pass-Phrase');
 
-        // Tạo một thông báo kết hợp từ response1 và response2
-        var combinedMessage = (response1 ? 'Ip address current: ' + response1 + '\n' : '') +
-                              (response2 ? 'Response' + response2 + '\n' : '');
+            function updateWirelessSettings() {
+                var selectedMode = Array.from(wirelessModeRadio).find(radio => radio.checked).value;
 
-        // Nếu có thông báo từ URL, thêm vào thông báo kết hợp
-        if (message) {
-            combinedMessage += message;
-        }
+                // Đặt các giá trị từ JSON cho Wireless SSID và Pass Phrase khi chọn "Station"
+                if (selectedMode === 'station') {
+                    wirelessSSIDInput.value = '<?php echo $wirelessSSID; ?>';
+                    wirelessPassPhraseInput.value = '<?php echo $wirelessPassPhrase; ?>';
+                    // Loại bỏ lớp CSS 'access-point' khi chọn "Station"
+                    wirelessSSIDInput.classList.remove('access-point');
+                    wirelessPassPhraseInput.classList.remove('access-point');
+                } else {
+                    // Đặt giá trị mặc định cho Wireless SSID và Pass Phrase khi chọn "Access Point"
+                    wirelessSSIDInput.value = 'voyance';
+                    wirelessPassPhraseInput.value = '123456789';
+                    // Thêm lớp CSS 'access-point' vào các ô nhập khi chọn "Access Point"
+                    wirelessSSIDInput.classList.add('access-point');
+                    wirelessPassPhraseInput.classList.add('access-point');
+                }
 
-        // Hiển thị thông báo nếu có
-        if (combinedMessage) {
-            var notificationElement = document.getElementById('notification');
-            notificationElement.innerText = combinedMessage;
-            notificationElement.style.display = 'block';
-            setTimeout(function () {
-                notificationElement.style.display = 'none';
-            }, 3000);
-        }
-    });
-</script>
+                // Đặt thuộc tính readonly dựa trên chế độ được chọn
+                wirelessSSIDInput.readOnly = (selectedMode === 'access-point');
+                wirelessPassPhraseInput.readOnly = (selectedMode === 'access-point');
+            }
+
+            // Gắn hàm updateWirelessSettings vào sự kiện change của các nút radio
+            wirelessModeRadio.forEach(function (radio) {
+                radio.addEventListener('change', updateWirelessSettings);
+            });
+
+            // Gọi hàm này lúc ban đầu để đặt trạng thái ban đầu dựa trên nút radio được chọn
+            updateWirelessSettings();
+        });
+    </script>
 
 </div>
 </body>

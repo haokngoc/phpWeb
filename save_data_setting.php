@@ -44,10 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $response = socket_read($socket, 1024);  // 1024 là kích thước buffer nhan
     $response1 = socket_read($socket, 1024);
     $response2 = socket_read($socket, 1024);
+    $response3 = socket_read($socket, 1024);
     socket_close($socket);
     // In ra giá trị $response1 và $response2
     // header("Location: settings.php?message=" . urlencode($response));
-    header("Location: settings.php?message=" . urlencode($response) . "&response1=" . urlencode($response1) . "&response2=" . urlencode($response2));
+    header("Location: settings.php?message=" . urlencode($response) . "&response1=" . urlencode($response1) . "&response2=" . urlencode($response2) . "&response3=" . urlencode($response3));
     exit();
 } else {
     header("Location: index.php");
