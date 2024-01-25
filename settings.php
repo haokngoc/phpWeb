@@ -19,6 +19,7 @@ if ($data) {
 }
 $response1 = isset($_GET['response1']) ? $_GET['response1'] : '';
 $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
+$message = isset($_GET['message']) ? urldecode($_GET['message']) : '';
 ?>
 
 <!DOCTYPE html>
@@ -32,14 +33,14 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
     <style>
         .notification {
             position: fixed;
-            top: 80%;
+            top: 83%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: #4CAF50;
             color: #fff;
             padding: 15px;
             border-radius: 5px;
-            display: none;
+            /* display: none; */
             z-index: 1000; 
         }
         .wireless-settings input[type="text"].access-point {
@@ -52,6 +53,7 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
 <body>
 <?php include('navigation.php'); ?>
 <div class="container">
+
     <form action="save_data_setting.php" method="post">
         <p><strong>Network Settings</strong></p>
         <label for="ip-address">IP Address:</label>
@@ -85,9 +87,17 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
             <input type="text" id="wireless-Pass-Phrase" name="wireless-Pass-Phrase" <?php echo ($wirelessMode === 'access-point') ? 'value="123456789" readonly' : 'value="' . $wirelessPassPhrase . '"'; ?>>
             <br>
         </div>
-        <button type="submit" name="update-button">Update</button>
+        <button class = "btnUpdate" type="submit" name="update-button">Update</button>
     </form>
+    <br>
+
+    <form action="scan_wifi.php" method="post">
+        <button class = "btnScan" type="submit" name="scan-button">Scan WiFi</button>
+    </form>
+        <br>
+        
     <div id="notification" class="notification"></div>
+    <div id="notification2" class="notification2"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -128,6 +138,55 @@ $response2 = isset($_GET['response2']) ? $_GET['response2'] : '';
             // Gọi hàm này lúc ban đầu để đặt trạng thái ban đầu dựa trên nút radio được chọn
             updateWirelessSettings();
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy thông báo từ tham số URL
+            var urlParams = new URLSearchParams(window.location.search);
+            var message = urlParams.get('message');
+            var response1 = urlParams.get('response1');
+            var response2 = urlParams.get('response2');
+            var response3 = urlParams.get('response3');
+
+
+
+            // Tạo một thông báo kết hợp từ response1 và response2
+            var combinedMessage = (response1 ? 'Ip address current: ' + response1 + '\n' : '') +
+                    (response2 ? 'Response: ' + response2 + '\n' : '') +
+                    (response3 ? 'Info wifi: ' + response3 + '\n' : '');
+
+            // Nếu có thông báo từ URL, thêm vào thông báo kết hợp
+            if (message) {
+                combinedMessage += message;
+            }
+
+            // Hiển thị thông báo nếu có
+            if (combinedMessage) {
+                var notificationElement = document.getElementById('notification');
+                notificationElement.innerText = combinedMessage;
+                notificationElement.style.display = 'block';
+                setTimeout(function () {
+                    notificationElement.style.display = 'none';
+                }, 3000);
+            }
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy thông báo từ tham số URL
+            var urlParams = new URLSearchParams(window.location.search);
+            var message = urlParams.get('message');
+
+            // Hiển thị thông báo nếu có
+            if (message) {
+                var notificationElement = document.getElementById('notification2');
+                notificationElement.innerText = message;
+                notificationElement.style.display = 'block';
+            }
+        }); 
+
+
+        const btnUpdate = document.queryselector(".btnUpdate");
+        btnUpdate.addEventListener('click', (e) =>{
+            e.preventdefault();
+            console.log(('ds'))
+        })
     </script>
 
 </div>

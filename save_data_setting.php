@@ -38,8 +38,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     // Gửi dữ liệu 
+    $jsondataCMD = "cmd1";
+    socket_write($socket, $jsondataCMD, strlen($jsondataCMD));
+    usleep(500000);
     socket_write($socket, $jsonData, strlen($jsonData));
     // socket_close($socket);
+
     // Nhận thông báo 
     $response = socket_read($socket, 1024);  // 1024 là kích thước buffer nhan
     $response1 = socket_read($socket, 1024);
