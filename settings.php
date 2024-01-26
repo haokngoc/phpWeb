@@ -47,57 +47,65 @@ $message = isset($_GET['message']) ? urldecode($_GET['message']) : '';
             border: none;
             outline: none;
         }
+        .container {
+            width: 80vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
     </style>
 </head>
 <body>
 <?php include('navigation.php'); ?>
 <div class="container">
+        <div>
+        <form action="save_data_setting.php" method="post">
+            <p><strong>Network Settings</strong></p>
+            <label for="ip-address">IP Address:</label>
+            <input type="text" id="ip-address" name="ip-address" pattern="(?:[0-9]{1,3}\.){3}[0-9]{1,3}" title="Enter a valid IP address" required value="<?php echo $ipAddress; ?>"> 
 
-    <form action="save_data_setting.php" method="post">
-        <p><strong>Network Settings</strong></p>
-        <label for="ip-address">IP Address:</label>
-        <input type="text" id="ip-address" name="ip-address" pattern="(?:[0-9]{1,3}\.){3}[0-9]{1,3}" title="Enter a valid IP address" required value="<?php echo $ipAddress; ?>"> 
+            <p><strong>Logging Settings</strong></p>
+            <label for="logging-level">Logging Level:</label>
+            <select id="logging-level" name="logging-level">
+                <option value="debug" <?php echo ($loggingLevel === 'debug') ? 'selected' : ''; ?>>Debug</option>
+                <option value="info" <?php echo ($loggingLevel === 'info') ? 'selected' : ''; ?>>Info</option>
+                <option value="warning" <?php echo ($loggingLevel === 'warning') ? 'selected' : ''; ?>>Warning</option>
+                <option value="error" <?php echo ($loggingLevel === 'error') ? 'selected' : ''; ?>>Error</option>
+            </select>
 
-        <p><strong>Logging Settings</strong></p>
-        <label for="logging-level">Logging Level:</label>
-        <select id="logging-level" name="logging-level">
-            <option value="debug" <?php echo ($loggingLevel === 'debug') ? 'selected' : ''; ?>>Debug</option>
-            <option value="info" <?php echo ($loggingLevel === 'info') ? 'selected' : ''; ?>>Info</option>
-            <option value="warning" <?php echo ($loggingLevel === 'warning') ? 'selected' : ''; ?>>Warning</option>
-            <option value="error" <?php echo ($loggingLevel === 'error') ? 'selected' : ''; ?>>Error</option>
-        </select>
+            <p><strong>Wireless Settings</strong></p>
+            <label>Wireless Mode:</label>
+            <input type="radio" id="station" name="wireless-mode" value="station" <?php echo ($wirelessMode === 'station') ? 'checked' : ''; ?>>
+            <label for="station">Station</label>
 
-        <p><strong>Wireless Settings</strong></p>
-        <label>Wireless Mode:</label>
-        <input type="radio" id="station" name="wireless-mode" value="station" <?php echo ($wirelessMode === 'station') ? 'checked' : ''; ?>>
-        <label for="station">Station</label>
+            <input type="radio" id="access-point" name="wireless-mode" value="access-point" <?php echo ($wirelessMode === 'access-point') ? 'checked' : ''; ?>>
+            <label for="access-point">Access Point</label>
 
-        <input type="radio" id="access-point" name="wireless-mode" value="access-point" <?php echo ($wirelessMode === 'access-point') ? 'checked' : ''; ?>>
-        <label for="access-point">Access Point</label>
-
-        <!-- Thêm một lớp CSS để chứa các trường cài đặt không hiển thị mặc định -->
-        <div class="wireless-settings">
-            <p>Valid SSID and Pass Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
-            <br>
-            <label for="wireless-SSID">Wireless SSID:</label>
-            <input type="text" id="wireless-SSID" name="wireless-SSID" <?php echo ($wirelessMode === 'access-point') ? 'value="voyance" readonly' : 'value="' . $wirelessSSID . '"'; ?>>
-            <br>
-            <label for="wireless-Pass-Phrase">Wireless Pass Phrase:</label>
-            <input type="text" id="wireless-Pass-Phrase" name="wireless-Pass-Phrase" <?php echo ($wirelessMode === 'access-point') ? 'value="123456789" readonly' : 'value="' . $wirelessPassPhrase . '"'; ?>>
-            <br>
-        </div>
-        <button class = "btnUpdate" type="submit" name="update-button">Update</button>
-    </form>
-    <br>
-
-    <form action="scan_wifi.php" method="post">
-        <button class = "btnScan" type="submit" name="scan-button">Scan WiFi</button>
-    </form>
+            <!-- Thêm một lớp CSS để chứa các trường cài đặt không hiển thị mặc định -->
+            <div class="wireless-settings">
+                <p>Valid SSID and Pass Phrase characters are 0-9,A-Z,a-z,!#%+,-,.?[]^_}</p>
+                <br>
+                <label for="wireless-SSID">Wireless SSID:</label>
+                <input type="text" id="wireless-SSID" name="wireless-SSID" <?php echo ($wirelessMode === 'access-point') ? 'value="voyance" readonly' : 'value="' . $wirelessSSID . '"'; ?>>
+                <br>
+                <label for="wireless-Pass-Phrase">Wireless Pass Phrase:</label>
+                <input type="text" id="wireless-Pass-Phrase" name="wireless-Pass-Phrase" <?php echo ($wirelessMode === 'access-point') ? 'value="123456789" readonly' : 'value="' . $wirelessPassPhrase . '"'; ?>>
+                <br>
+            </div>
+            <button class = "btnUpdate" type="submit" name="update-button">Update</button>
+        </form>
         <br>
+
+        <form action="scan_wifi.php" method="post">
+            <button class = "btnScan" type="submit" name="scan-button">Scan WiFi</button>
+        </form>
+            <br>
+            
+        <div id="notification" class="notification"></div>
+        <div id="notification2" class="notification2"></div>
+        </div>
         
-    <div id="notification" class="notification"></div>
-    <div id="notification2" class="notification2"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
