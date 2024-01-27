@@ -189,12 +189,6 @@ $message = isset($_GET['message']) ? urldecode($_GET['message']) : '';
             }
         }); 
 
-
-        const btnUpdate = document.queryselector(".btnUpdate");
-        btnUpdate.addEventListener('click', (e) =>{
-            e.preventdefault();
-            console.log(('ds'))
-        })
     </script>
 
 </div>
